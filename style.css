@@ -1,0 +1,233 @@
+/* CASCADE — Warm Beige & Brown Luxury Aesthetic Design System */
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700;800&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400;1,600&family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=Newsreader:ital,opsz,wght@0,6..72,300;0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400&display=swap');
+
+:root {
+  --font-scale: 1;
+  --font-base: calc(1rem * var(--font-scale));
+  --font-sm: calc(0.875rem * var(--font-scale));
+  --font-xs: calc(0.78rem * var(--font-scale));
+  --font-lg: calc(1.125rem * var(--font-scale));
+  --font-xl: calc(1.28rem * var(--font-scale));
+  --font-2xl: calc(1.6rem * var(--font-scale));
+
+  /* Warm Beige & Parchment Palette (Light Theme) */
+  --bg-app: #f5ede0;           /* Soft Italian parchment beige */
+  --bg-surface: #fcf9f2;       /* Cream ivory paper */
+  --bg-subtle: #ede2cf;        /* Muted sand */
+  --border-color: #d8c7af;     /* Warm antique bronze border */
+  --border-focus: #8c6843;     /* Rich roasted chestnut */
+  --text-primary: #271a0e;     /* Deep espresso brown */
+  --text-secondary: #5a432e;   /* Roasted coffee bean */
+  --text-muted: #8c735a;       /* Warm sepia gray */
+
+  /* Accents — Vintage Gold & Chestnut */
+  --accent-primary: #8c6843;
+  --accent-primary-hover: #73512f;
+  --accent-subtle: #efe4d2;
+
+  --success: #4a7c59;
+  --success-bg: #eaf3ed;
+  --success-border: #a9cdb5;
+  --success-text: #224c2e;
+
+  --warning: #b8860b;
+  --warning-bg: #fdf5df;
+  --warning-border: #ebd69b;
+  --warning-text: #705003;
+
+  --error: #b33939;
+  --error-bg: #fae8e8;
+  --error-border: #e6a8a8;
+  --error-text: #731e1e;
+
+  /* Elevation */
+  --shadow-sm: 0 1px 3px 0 rgba(70, 48, 25, 0.06);
+  --shadow-md: 0 4px 12px -2px rgba(70, 48, 25, 0.08), 0 2px 4px -1px rgba(70, 48, 25, 0.05);
+  --shadow-lg: 0 12px 24px -4px rgba(70, 48, 25, 0.12), 0 4px 8px -2px rgba(70, 48, 25, 0.05);
+}
+
+[data-theme="dark"] {
+  --bg-app: #18130d;           /* Deep obsidian espresso */
+  --bg-surface: #221c14;       /* Dark roasted mocha card */
+  --bg-subtle: #2d241b;        /* Warm bronze charcoal */
+  --border-color: #44372a;     /* Burnished bronze */
+  --border-focus: #d1a877;     /* Warm champagne gold */
+  --text-primary: #f8efe4;     /* Warm ivory */
+  --text-secondary: #d3beaa;   /* Soft oat */
+  --text-muted: #9e8975;       /* Muted hazelnut */
+
+  --accent-primary: #cba271;
+  --accent-primary-hover: #dbb586;
+  --accent-subtle: #352a1e;
+
+  --success: #639c73;
+  --success-bg: #1c2b20;
+  --success-border: #35573d;
+  --success-text: #b6dec0;
+
+  --warning: #d9a426;
+  --warning-bg: #2e2410;
+  --warning-border: #6e520d;
+  --warning-text: #f0d58a;
+
+  --error: #cf5d5d;
+  --error-bg: #301717;
+  --error-border: #732a2a;
+  --error-text: #f0b4b4;
+}
+
+/* Base setup */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+  background-color: var(--bg-app);
+  color: var(--text-primary);
+  font-size: var(--font-base);
+  line-height: 1.68;
+  min-height: 100vh;
+  transition: background-color 0.25s ease, color 0.25s ease;
+  background-image: radial-gradient(rgba(140, 104, 67, 0.04) 1px, transparent 1px);
+  background-size: 20px 20px;
+}
+
+/* Headings use Playfair Display / Cinzel */
+h1, h2, h3, h4, h5, h6, .brand-font {
+  font-family: 'Playfair Display', Georgia, serif;
+  letter-spacing: -0.015em;
+  font-weight: 700;
+}
+
+/* Accessible focus ring */
+button:focus-visible, a:focus-visible, input:focus-visible {
+  outline: 2px solid var(--accent-primary);
+  outline-offset: 2px;
+}
+
+/* KaTeX tweaks */
+.katex-display {
+  margin: 0.85rem 0 !important;
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding: 0.35rem 0;
+}
+.katex {
+  font-size: 1.08em !important;
+  color: var(--text-primary);
+}
+
+/* Option Cards */
+.cascade-option-card {
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  cursor: pointer;
+  border: 1.5px solid var(--border-color);
+  background: var(--bg-surface);
+  border-radius: 14px;
+}
+.cascade-option-card:hover:not(.disabled) {
+  border-color: var(--accent-primary);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+.cascade-option-card.selected {
+  border-color: var(--accent-primary);
+  background: var(--accent-subtle);
+}
+.cascade-option-card.is-correct {
+  border-color: #4a7c59 !important;
+  background-color: #eaf3ed !important;
+  color: #224c2e !important;
+}
+[data-theme="dark"] .cascade-option-card.is-correct {
+  border-color: #639c73 !important;
+  background-color: #1c2b20 !important;
+  color: #b6dec0 !important;
+}
+
+.cascade-option-card.is-incorrect {
+  border-color: #b33939 !important;
+  background-color: #fae8e8 !important;
+  color: #731e1e !important;
+}
+[data-theme="dark"] .cascade-option-card.is-incorrect {
+  border-color: #cf5d5d !important;
+  background-color: #301717 !important;
+  color: #f0b4b4 !important;
+}
+
+@keyframes shakeWrong {
+  0%, 100% { transform: translateX(0); }
+  20%, 60% { transform: translateX(-4px); }
+  40%, 80% { transform: translateX(4px); }
+}
+.animate-shake {
+  animation: shakeWrong 0.35s ease-in-out;
+}
+
+/* Step Node in Stepwise Hint Panel */
+.cascade-step-node {
+  position: relative;
+  transition: all 0.25s ease;
+}
+.cascade-step-node::before {
+  content: '';
+  position: absolute;
+  top: 36px;
+  bottom: -24px;
+  left: 17px;
+  width: 2px;
+  background: var(--border-color);
+  z-index: 0;
+}
+.cascade-step-node:last-child::before {
+  display: none;
+}
+.cascade-step-node.completed::before {
+  background: var(--success);
+}
+
+/* Heatmap Block */
+.heatmap-cell {
+  aspect-ratio: 1;
+  border-radius: 6px;
+  transition: transform 0.15s ease;
+}
+.heatmap-cell:hover {
+  transform: scale(1.15);
+}
+
+/* Smooth fade in */
+@keyframes cascadeFadeIn {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.animate-cascade-fade {
+  animation: cascadeFadeIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* Modal Blur */
+.cascade-modal-backdrop {
+  background: rgba(39, 26, 14, 0.6);
+  backdrop-filter: blur(8px);
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: var(--bg-subtle);
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--border-color);
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--accent-primary);
+}

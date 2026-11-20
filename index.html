@@ -1,0 +1,696 @@
+﻿<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CASCADE — Interactive Stepwise JEE/NEET Learning Platform</title>
+
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: ['class', '[data-theme="dark"]'],
+      theme: {
+        extend: {
+          colors: {
+            brand: { 50: '#fdfbf7', 100: '#f5ede2', 500: '#a3845b', 600: '#8b6f47', 700: '#745a35', 800: '#5c4628' }, amber: { 50: '#fcf8ee', 100: '#f7edcf', 500: '#b8860b', 600: '#9e7309', 700: '#7a5c00' }
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- KaTeX -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <!-- Custom Stylesheet -->
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="bg-[var(--bg-app)] text-[var(--text-primary)] min-h-screen flex flex-col antialiased">
+
+  <!-- Top Global Navigation -->
+  <header class="sticky top-0 z-40 bg-[var(--bg-surface)]/95 backdrop-blur-md border-b border-[var(--border-color)] shadow-sm">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+      
+      <!-- Logo & App Brand -->
+      <div class="flex items-center space-x-3 cursor-pointer" onclick="navigateTo('home')">
+        <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-[#8b6f47] to-[#5c4628] flex items-center justify-center text-white shadow-md shadow-[#8b6f47]/20">
+          <i data-lucide="layers" class="w-5 h-5"></i>
+        </div>
+        <div>
+          <div class="flex items-center space-x-2">
+            <span class="font-black text-xl tracking-tight text-[var(--text-primary)]">CASCADE</span>
+            <span class="px-1.5 py-0.5 text-[10px] font-bold rounded bg-[#f5ede2] dark:bg-[#342a1e] text-[#745a35] dark:text-[#d4b480] uppercase tracking-wide">EdTech</span>
+          </div>
+          <p class="text-[11px] text-[var(--text-muted)] -mt-0.5 hidden sm:block">Stepwise Interactive Question Bank</p>
+        </div>
+      </div>
+
+      <!-- App Navigation Tabs -->
+      <nav class="hidden md:flex items-center space-x-1 bg-[var(--bg-subtle)] p-1 rounded-xl border border-[var(--border-color)]">
+        <button onclick="navigateTo('home')" class="nav-btn px-3 py-1.5 rounded-lg text-xs font-semibold transition" data-view="home">
+          <i data-lucide="home" class="w-3.5 h-3.5 inline mr-1"></i>Home
+        </button>
+        <button onclick="navigateTo('practice')" class="nav-btn px-3 py-1.5 rounded-lg text-xs font-semibold transition" data-view="practice">
+          <i data-lucide="edit-3" class="w-3.5 h-3.5 inline mr-1"></i>Practice
+        </button>
+        <button onclick="navigateTo('browser')" class="nav-btn px-3 py-1.5 rounded-lg text-xs font-semibold transition" data-view="browser">
+          <i data-lucide="grid" class="w-3.5 h-3.5 inline mr-1"></i>Question Bank
+        </button>
+        <button onclick="navigateTo('analytics')" class="nav-btn px-3 py-1.5 rounded-lg text-xs font-semibold transition" data-view="analytics">
+          <i data-lucide="bar-chart-2" class="w-3.5 h-3.5 inline mr-1"></i>Analytics
+        </button>
+        <button onclick="navigateTo('settings')" class="nav-btn px-3 py-1.5 rounded-lg text-xs font-semibold transition" data-view="settings">
+          <i data-lucide="settings" class="w-3.5 h-3.5 inline mr-1"></i>Settings
+        </button>
+      </nav>
+
+      <!-- Right Utility Bar: Tools & Controls -->
+      <div class="flex items-center space-x-3">
+        
+        <!-- Stepwise Guidance Badge -->
+        <div class="flex items-center space-x-1.5 px-3 py-1.5 rounded-full bg-[#fdfbf7] dark:bg-[#342a1e]/60 border border-[#e0d5c7] dark:border-[#5c4628] text-[#745a35] dark:text-[#d4b480] text-xs font-semibold" title="Interactive Stepwise Guidance Enabled">
+          <i data-lucide="compass" class="w-3.5 h-3.5 text-[#8b6f47] dark:text-[#c4a26e]"></i>
+          <span>Stepwise Guidance</span>
+        </div>
+
+        <!-- Tutor Mode Trigger -->
+        <button id="btnOpenTutorDrawer" class="hidden sm:flex items-center space-x-1 text-xs px-2.5 py-1.5 rounded-lg border border-[var(--border-color)] bg-[var(--bg-surface)] hover:bg-[var(--bg-subtle)] text-[var(--text-secondary)] font-medium transition" title="Open Tutor Inspection Drawer">
+          <i data-lucide="user-check" class="w-3.5 h-3.5 text-[#a3845b]"></i>
+          <span>Tutor Mode</span>
+        </button>
+
+        <!-- Theme Toggle -->
+        <button id="btnThemeToggle" class="p-2 rounded-lg text-[var(--text-muted)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-subtle)] transition" title="Toggle Theme">
+          <i data-lucide="moon" id="globalThemeIcon" class="w-4 h-4"></i>
+        </button>
+      </div>
+
+    </div>
+
+    <!-- Mobile Bottom Navigation Bar -->
+    <div class="md:hidden flex items-center justify-around border-t border-[var(--border-color)] py-2 bg-[var(--bg-surface)]">
+      <button onclick="navigateTo('home')" class="mobile-nav-btn flex flex-col items-center text-[10px] font-medium" data-view="home">
+        <i data-lucide="home" class="w-4 h-4 mb-0.5"></i>Home
+      </button>
+      <button onclick="navigateTo('practice')" class="mobile-nav-btn flex flex-col items-center text-[10px] font-medium" data-view="practice">
+        <i data-lucide="edit-3" class="w-4 h-4 mb-0.5"></i>Practice
+      </button>
+      <button onclick="navigateTo('browser')" class="mobile-nav-btn flex flex-col items-center text-[10px] font-medium" data-view="browser">
+        <i data-lucide="grid" class="w-4 h-4 mb-0.5"></i>Bank
+      </button>
+      <button onclick="navigateTo('analytics')" class="mobile-nav-btn flex flex-col items-center text-[10px] font-medium" data-view="analytics">
+        <i data-lucide="bar-chart-2" class="w-4 h-4 mb-0.5"></i>Stats
+      </button>
+      <button onclick="navigateTo('settings')" class="mobile-nav-btn flex flex-col items-center text-[10px] font-medium" data-view="settings">
+        <i data-lucide="settings" class="w-4 h-4 mb-0.5"></i>Settings
+      </button>
+    </div>
+  </header>
+
+  <!-- MAIN APP SCREENS CONTAINER -->
+  <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6">
+
+    <!-- ========================================== -->
+    <!-- SCREEN 1: HOME DASHBOARD                   -->
+    <!-- ========================================== -->
+    <section id="viewHome" class="space-y-8 animate-cascade-fade">
+      
+      <!-- Hero Banner -->
+      <div class="bg-gradient-to-r from-[#382614] via-[#4a341c] to-[#2b1b0d] text-white rounded-3xl p-6 sm:p-8 shadow-lg relative overflow-hidden">
+        <div class="relative z-10 max-w-2xl space-y-3">
+          <div class="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-[#6d5433]/60 border border-[#a3845b]/40 text-xs font-semibold text-[#e8dac9]">
+            <i data-lucide="sparkles" class="w-3.5 h-3.5"></i>
+            <span>JEE Main Comprehensive Mathematics</span>
+          </div>
+          <h1 class="text-2xl sm:text-4xl font-extrabold tracking-tight">
+            Master Core Mathematics with Stepwise Guidance
+          </h1>
+          <p class="text-[#e8dac9] text-sm leading-relaxed">
+            CASCADE replaces passive solution reading with active multi-choice problem-solving steps. When stuck, unlock intermediate stepping stones rather than spoiling the answer!
+          </p>
+          <div class="pt-3 flex flex-wrap items-center gap-3">
+            <button onclick="startPracticeSession(0)" class="px-5 py-2.5 bg-white text-[#2c1e10] font-bold text-sm rounded-xl shadow hover:bg-[#f5ede2] transition flex items-center space-x-2">
+              <i data-lucide="play" class="w-4 h-4 fill-current"></i>
+              <span>Start Practice Session</span>
+            </button>
+            <button onclick="navigateTo('browser')" class="px-4 py-2.5 bg-[#6d5433]/50 hover:bg-[#6d5433]/80 border border-[#a3845b]/30 text-white font-semibold text-sm rounded-xl transition">
+              Browse Question Bank
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quick Stats Metrics -->
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <div class="p-5 rounded-2xl bg-[var(--bg-surface)] border border-[var(--border-color)] shadow-sm">
+          <div class="text-xs font-semibold text-[var(--text-muted)] uppercase tracking-wider">Practice Streak</div>
+          <div class="text-2xl font-black text-amber-500 mt-1 flex items-center space-x-1.5">
+            <i data-lucide="flame" class="w-6 h-6"></i>
+            <span>4 Days</span>
+          </div>
+          <div class="text-[11px] text-[var(--text-muted)] mt-1">Keep it up! 1 session today</div>
+        </div>
+        <div class="p-5 rounded-2xl bg-[var(--bg-surface)] border border-[var(--border-color)] shadow-sm">
+          <div class="text-xs font-semibold text-[var(--text-muted)] uppercase tracking-wider">Mastered</div>
+          <div class="text-2xl font-black text-emerald-600 mt-1" id="homeMasteredCount">0 / 5</div>
+          <div class="text-[11px] text-[var(--text-muted)] mt-1">Top Ranked PYQ Problems</div>
+        </div>
+        <div class="p-5 rounded-2xl bg-[var(--bg-surface)] border border-[var(--border-color)] shadow-sm">
+          <div class="text-xs font-semibold text-[var(--text-muted)] uppercase tracking-wider">Stepwise Hints</div>
+          <div class="text-2xl font-black text-[#8b6f47] mt-1">Unlimited</div>
+          <div class="text-[11px] text-[var(--text-muted)] mt-1">Free on-demand guidance</div>
+        </div>
+        <div class="p-5 rounded-2xl bg-[var(--bg-surface)] border border-[var(--border-color)] shadow-sm">
+          <div class="text-xs font-semibold text-[var(--text-muted)] uppercase tracking-wider">Saved For Revision</div>
+          <div class="text-2xl font-black text-[#8b6f47] mt-1" id="homeBookmarksCount">0 Items</div>
+          <div class="text-[11px] text-[var(--text-muted)] mt-1">Marked for deep review</div>
+        </div>
+      </div>
+
+      <!-- Recommended Practice & Module List -->
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+        
+        <!-- Left 8 cols: Recent Questions -->
+        <div class="lg:col-span-8 space-y-4">
+          <div class="flex items-center justify-between">
+            <h2 class="text-lg font-bold text-[var(--text-primary)]">Comprehensive Question Bank & Modules</h2>
+            <button onclick="navigateTo('browser')" class="text-xs text-[#8b6f47] dark:text-[#c4a26e] font-semibold hover:underline">View All</button>
+          </div>
+          <div class="space-y-3" id="homeQuestionsList">
+            <!-- Rendered via JS -->
+          </div>
+        </div>
+
+        <!-- Right 4 cols: Stepwise Pedagogical Overview -->
+        <div class="lg:col-span-4 space-y-4">
+          <div class="p-6 rounded-2xl bg-[var(--bg-surface)] border border-[var(--border-color)] shadow-sm space-y-3">
+            <div class="flex items-center space-x-2 text-[#8b6f47] dark:text-[#c4a26e] font-bold text-sm">
+              <i data-lucide="compass" class="w-4 h-4"></i>
+              <span>The CASCADE Advantage</span>
+            </div>
+            <p class="text-xs text-[var(--text-secondary)] leading-relaxed">
+              Standard question banks immediately show the full solution on failure, robbing students of the chance to think.
+            </p>
+            <div class="space-y-2 pt-1 text-xs">
+              <div class="flex items-start space-x-2">
+                <span class="w-4 h-4 rounded-full bg-emerald-100 text-emerald-800 flex items-center justify-center shrink-0 font-bold text-[10px]">1</span>
+                <span>Attempts question independently.</span>
+              </div>
+              <div class="flex items-start space-x-2">
+                <span class="w-4 h-4 rounded-full bg-amber-100 text-amber-800 flex items-center justify-center shrink-0 font-bold text-[10px]">2</span>
+                <span>Incorrect choice triggers <strong>Step 1 with 4 intermediate options</strong>.</span>
+              </div>
+              <div class="flex items-start space-x-2">
+                <span class="w-4 h-4 rounded-full bg-[#f5ede2] text-indigo-800 flex items-center justify-center shrink-0 font-bold text-[10px]">3</span>
+                <span>Max 2 attempts per step with option to reveal solution.</span>
+              </div>
+              <div class="flex items-start space-x-2">
+                <span class="w-4 h-4 rounded-full bg-[#f5ede2] text-[#5c4628] flex items-center justify-center shrink-0 font-bold text-[10px]">4</span>
+                <span>Full Single-Page explanation available anytime.</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </section>
+
+    <!-- ========================================== -->
+    <!-- SCREEN 2: PRACTICE SESSION SCREEN          -->
+    <!-- ========================================== -->
+    <section id="viewPractice" class="hidden space-y-6 animate-cascade-fade">
+      
+      <!-- Session Top Bar -->
+      <div class="flex flex-wrap items-center justify-between gap-3 bg-[var(--bg-surface)] p-3.5 sm:px-5 rounded-2xl border border-[var(--border-color)] shadow-sm">
+        <div class="flex items-center space-x-3">
+          <button onclick="navigateTo('browser')" class="p-1.5 rounded-lg text-[var(--text-muted)] hover:bg-[var(--bg-subtle)]" title="Back to Browser">
+            <i data-lucide="arrow-left" class="w-4 h-4"></i>
+          </button>
+          <div class="flex items-center space-x-2">
+            <span class="text-xs font-bold px-2.5 py-1 rounded-lg bg-[#8b6f47] text-white" id="practiceQuestionBadge">Q1 of 5</span>
+            <span class="text-xs font-medium text-[var(--text-muted)] hidden sm:inline" id="practiceSubjectTopic">Mathematics • Indefinite Integration</span>
+          </div>
+        </div>
+
+        <!-- Question Navigation Pills -->
+        <div class="flex items-center space-x-1.5" id="practicePillsBar">
+          <!-- Dynamic Pills -->
+        </div>
+
+        <!-- Timer & Bookmark -->
+        <div class="flex items-center space-x-2.5 text-xs text-[var(--text-muted)]">
+          <div class="flex items-center space-x-1 bg-[var(--bg-subtle)] px-2.5 py-1 rounded-lg border border-[var(--border-color)]">
+            <i data-lucide="clock" class="w-3.5 h-3.5"></i>
+            <span id="practiceTimerText" class="font-mono font-medium">00:00</span>
+          </div>
+          <button id="btnBookmarkToggle" class="p-1.5 rounded-lg border border-[var(--border-color)] hover:bg-[var(--bg-subtle)] transition" title="Save to Revision">
+            <i data-lucide="bookmark" id="iconBookmark" class="w-4 h-4 text-slate-400"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- MAIN PRACTICE WORKSPACE (Desktop: Side-by-Side 7/5 cols; Mobile: Stacked) -->
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+        
+        <!-- LEFT: Question Statement & Main Multiple Choice Area (7 Cols) -->
+        <div class="lg:col-span-7 space-y-5">
+          
+          <div class="bg-[var(--bg-surface)] border border-[var(--border-color)] rounded-2xl p-6 sm:p-7 shadow-sm">
+            
+            <!-- Question Metadata Header -->
+            <div class="flex items-center justify-between pb-3 mb-3 border-b border-[var(--border-color)] text-xs text-[var(--text-muted)]">
+              <span id="txtExamShift" class="font-semibold text-[#8b6f47] dark:text-[#c4a26e]">JEE Main 2026 (23 January Shift 1)</span>
+              <span class="px-2 py-0.5 rounded bg-amber-50 dark:bg-amber-950 text-amber-700 dark:text-amber-300 border border-amber-200 dark:border-amber-800 font-medium">Hard</span>
+            </div>
+
+            <!-- Problem Statement -->
+            <div class="my-4">
+              <div class="text-base sm:text-lg text-[var(--text-primary)] leading-relaxed overflow-x-auto py-2" id="txtPracticeStatement">
+                <!-- KaTeX content -->
+              </div>
+            </div>
+
+            <!-- Main Options Container (4 MCQ Options) -->
+            <div class="mt-6 space-y-3" id="practiceOptionsContainer">
+              <!-- Rendered via JS -->
+            </div>
+
+            <!-- Incorrect Answer Alert Banner (Shows when wrong answer submitted) -->
+            <div id="practiceIncorrectAlert" class="hidden mt-4 p-4 rounded-xl bg-rose-50 dark:bg-rose-950/40 border-2 border-rose-400 dark:border-rose-800 text-rose-900 dark:text-rose-200 text-xs sm:text-sm animate-shake">
+              <!-- Rendered via JS -->
+            </div>
+
+            <!-- Practice Action Toolbar -->
+            <div class="mt-6 pt-5 border-t border-[var(--border-color)] flex flex-wrap items-center justify-between gap-3">
+              <div class="flex items-center space-x-3">
+                <button id="btnPracticeSubmit" class="px-5 py-2.5 bg-[#8b6f47] hover:bg-[#745a35] text-white font-semibold text-xs sm:text-sm rounded-xl shadow transition disabled:opacity-40 disabled:cursor-not-allowed flex items-center space-x-1.5">
+                  <i data-lucide="check-circle" class="w-4 h-4"></i>
+                  <span>Submit Answer</span>
+                </button>
+                <button id="btnPracticeHint" class="px-4 py-2.5 bg-amber-50 dark:bg-amber-950/60 hover:bg-amber-100 text-amber-800 dark:text-amber-200 border border-amber-300 dark:border-amber-800 font-medium text-xs sm:text-sm rounded-xl flex items-center space-x-1.5 transition">
+                  <i data-lucide="lightbulb" class="w-4 h-4 text-amber-500"></i>
+                  <span>Need Hint / Guide Me</span>
+                </button>
+              </div>
+
+              <!-- Single Page Explanation Button (Always Accessible) -->
+              <button id="btnOpenFullExplanation" class="text-xs sm:text-sm font-semibold text-[#8b6f47] dark:text-[#c4a26e] hover:underline flex items-center space-x-1 py-1">
+                <i data-lucide="file-text" class="w-4 h-4"></i>
+                <span>Full Explanation (Single Page)</span>
+              </button>
+            </div>
+
+          </div>
+
+          <!-- Direct Success Banner (Shows on correct main answer) -->
+          <div id="practiceSuccessBanner" class="hidden p-5 rounded-2xl bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-300 dark:border-emerald-800 animate-cascade-fade">
+            <div class="flex items-start space-x-3">
+              <div class="w-9 h-9 rounded-xl bg-emerald-600 text-white flex items-center justify-center shrink-0">
+                <i data-lucide="check" class="w-5 h-5 stroke-[3]"></i>
+              </div>
+              <div class="flex-1">
+                <h4 class="font-bold text-sm text-emerald-900 dark:text-emerald-200">Spot on! Correct answer on initial attempt.</h4>
+                <p class="text-xs text-[var(--text-muted)] mt-0.5">
+                  Great conceptual mastery. You can proceed directly to the next question or inspect the full derivation.
+                </p>
+                <div class="mt-3 flex items-center space-x-2">
+                  <button onclick="goToNextPracticeQuestion()" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-xs rounded-xl transition flex items-center space-x-1">
+                    <span>Next Question</span>
+                    <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
+                  </button>
+                  <button onclick="openFullExplanationModal()" class="px-3 py-2 bg-white dark:bg-slate-800 border border-[var(--border-color)] text-xs font-medium rounded-xl text-[var(--text-primary)]">
+                    View Recap
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- RIGHT: STEPWISE HINT PANEL (5 Cols) -->
+        <div class="lg:col-span-5 space-y-4" id="practiceRightColumn">
+          
+          <div class="bg-[var(--bg-surface)] border-2 border-[#e0d5c7] dark:border-[#42382d] rounded-2xl p-5 sm:p-6 shadow-md space-y-5" id="stepwisePanelContainer">
+            
+            <!-- Panel Header -->
+            <div class="flex items-center justify-between pb-3 border-b border-[var(--border-color)]">
+              <div class="flex items-center space-x-2">
+                <div class="w-7 h-7 rounded-lg bg-amber-100 dark:bg-amber-900/50 text-amber-700 dark:text-amber-300 flex items-center justify-center">
+                  <i data-lucide="compass" class="w-4 h-4"></i>
+                </div>
+                <div>
+                  <h3 class="text-sm font-bold text-[var(--text-primary)]">Stepwise Hint Coaching</h3>
+                  <p class="text-[10px] text-[var(--text-muted)]">Interactive step-by-step guidance</p>
+                </div>
+              </div>
+              <span class="text-xs font-semibold px-2 py-0.5 rounded-full bg-slate-100 dark:bg-slate-800 text-[var(--text-muted)]" id="stepwiseProgressLabel">
+                Step 1 of 4
+              </span>
+            </div>
+
+            <!-- Empty State (When student hasn't failed or requested hint yet) -->
+            <div id="stepwiseEmptyState" class="py-8 text-center space-y-2">
+              <i data-lucide="help-circle" class="w-8 h-8 text-[var(--text-muted)] mx-auto opacity-50"></i>
+              <p class="text-xs font-semibold text-[var(--text-muted)]">Stepwise coaching is ready</p>
+              <p class="text-[11px] text-[var(--text-muted)] max-w-xs mx-auto">
+                Submit an answer or click <strong>Use Hint</strong> to reveal Step 1 and its 4 choice options.
+              </p>
+            </div>
+
+            <!-- Active Stepwise Flow Container -->
+            <div id="stepwiseActiveFlow" class="hidden space-y-5">
+              
+              <!-- Stack of unlocked steps -->
+              <div class="space-y-4" id="stepwiseNodesStack">
+                <!-- Rendered dynamically -->
+              </div>
+
+              <!-- Completion card when all steps unlocked -->
+              <div id="stepwiseFinalCard" class="hidden p-4 rounded-xl bg-gradient-to-r from-emerald-500/10 to-indigo-500/10 border border-emerald-500/30 text-center space-y-3">
+                <div class="w-10 h-10 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center mx-auto">
+                  <i data-lucide="check" class="w-5 h-5 stroke-[3]"></i>
+                </div>
+                <h4 class="font-bold text-xs sm:text-sm text-emerald-800 dark:text-emerald-300">All Steps Completed Successfully!</h4>
+                <p class="text-[11px] text-[var(--text-muted)]">
+                  You broke down the solution step-by-step and arrived at the final answer.
+                </p>
+                <div class="pt-1 flex items-center justify-center space-x-2">
+                  <button onclick="goToNextPracticeQuestion()" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-xs rounded-xl shadow">
+                    Next Question
+                  </button>
+                  <button onclick="openFullExplanationModal()" class="px-3 py-2 bg-white dark:bg-slate-800 border border-[var(--border-color)] text-xs font-medium rounded-xl">
+                    View Full Recap
+                  </button>
+                </div>
+              </div>
+
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </section>
+
+    <!-- ========================================== -->
+    <!-- SCREEN 3: QUESTION BANK BROWSER            -->
+    <!-- ========================================== -->
+    <section id="viewBrowser" class="hidden space-y-6 animate-cascade-fade">
+      
+      <!-- Top Search & Filter Bar -->
+      <div class="bg-[var(--bg-surface)] p-5 rounded-2xl border border-[var(--border-color)] shadow-sm space-y-4">
+        <div class="flex flex-col sm:flex-row items-center justify-between gap-4">
+          <div>
+            <h2 class="text-xl font-bold text-[var(--text-primary)]">Question Bank Browser</h2>
+            <p class="text-xs text-[var(--text-muted)]">Filter JEE/NEET questions by topic, difficulty, or revision bookmarks</p>
+          </div>
+          <div class="w-full sm:w-72 relative">
+            <i data-lucide="search" class="w-4 h-4 text-[var(--text-muted)] absolute left-3 top-2.5"></i>
+            <input type="text" id="browserSearchInput" placeholder="Search questions, concepts..." class="w-full pl-9 pr-3 py-2 text-xs rounded-xl border border-[var(--border-color)] bg-[var(--bg-subtle)] text-[var(--text-primary)] focus:outline-none focus:ring-2 focus:ring-[#8b6f47]">
+          </div>
+        </div>
+
+        <!-- Filter Chips -->
+        <div class="flex flex-wrap items-center gap-2 pt-2 border-t border-[var(--border-color)] text-xs">
+          <span class="text-[var(--text-muted)] font-medium mr-1">Difficulty:</span>
+          <button class="filter-chip px-2.5 py-1 rounded-lg border border-[#8b6f47] bg-[#fdfbf7] dark:bg-[#342a1e] text-[#745a35] dark:text-[#d4b480] font-semibold" data-filter="all">All</button>
+          <button class="filter-chip px-2.5 py-1 rounded-lg border border-[var(--border-color)] hover:bg-[var(--bg-subtle)] text-[var(--text-secondary)]" data-filter="hard">Hard (JEE Adv/Main)</button>
+          <span class="text-[var(--text-muted)] font-medium mx-2">|</span>
+          <button id="btnFilterBookmarksOnly" class="px-2.5 py-1 rounded-lg border border-[var(--border-color)] hover:bg-[var(--bg-subtle)] text-[var(--text-secondary)] flex items-center space-x-1">
+            <i data-lucide="bookmark" class="w-3.5 h-3.5"></i>
+            <span>Revision Bookmarks Only</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Question Cards Grid -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4" id="browserCardsGrid">
+        <!-- Rendered dynamically -->
+      </div>
+
+    </section>
+
+    <!-- ========================================== -->
+    <!-- SCREEN 4: ANALYTICS DASHBOARD              -->
+    <!-- ========================================== -->
+    <section id="viewAnalytics" class="hidden space-y-6 animate-cascade-fade">
+      
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+        <div>
+          <h2 class="text-xl font-bold text-[var(--text-primary)]">Performance & Step Analytics</h2>
+          <p class="text-xs text-[var(--text-muted)]">Per-question diagnostic trace, attempts per step, and topic mastery</p>
+        </div>
+        <div class="text-xs text-[var(--text-muted)]">
+          Real-time session stats
+        </div>
+      </div>
+
+      <!-- Top Metric Cards -->
+      <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+        <div class="p-5 rounded-2xl bg-[var(--bg-surface)] border border-[var(--border-color)] shadow-sm">
+          <div class="text-xs text-[var(--text-muted)] font-medium uppercase">First-Try Direct Accuracy</div>
+          <div class="text-2xl font-black text-[#8b6f47] mt-1" id="analyticsAccuracyGauge">0%</div>
+          <p class="text-[11px] text-[var(--text-muted)] mt-1">Questions solved without hints</p>
+        </div>
+        <div class="p-5 rounded-2xl bg-[var(--bg-surface)] border border-[var(--border-color)] shadow-sm">
+          <div class="text-xs text-[var(--text-muted)] font-medium uppercase">Average Attempts / Step</div>
+          <div class="text-2xl font-black text-amber-500 mt-1" id="analyticsAvgAttempts">1.2</div>
+          <p class="text-[11px] text-[var(--text-muted)] mt-1">Max 2 attempts before reveal</p>
+        </div>
+        <div class="p-5 rounded-2xl bg-[var(--bg-surface)] border border-[var(--border-color)] shadow-sm">
+          <div class="text-xs text-[var(--text-muted)] font-medium uppercase">Guided Steps Completed</div>
+          <div class="text-2xl font-black text-emerald-600 mt-1" id="analyticsTotalStepsDone">0 Steps</div>
+          <p class="text-[11px] text-[var(--text-muted)] mt-1">Active problem breakdown</p>
+        </div>
+        <div class="p-5 rounded-2xl bg-[var(--bg-surface)] border border-[var(--border-color)] shadow-sm">
+          <div class="text-xs text-[var(--text-muted)] font-medium uppercase">Calculus Mastery Level</div>
+          <div class="text-2xl font-black text-[#8b6f47] mt-1" id="analyticsMasteryLevel">Level 2</div>
+          <p class="text-[11px] text-[var(--text-muted)] mt-1">Based on JEE 2026 shifts</p>
+        </div>
+      </div>
+
+      <!-- Mastery Heatmap & Diagnostic Trace -->
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+        
+        <!-- Topic Mastery Heatmap (6 cols) -->
+        <div class="lg:col-span-6 p-6 rounded-2xl bg-[var(--bg-surface)] border border-[var(--border-color)] shadow-sm space-y-4">
+          <h3 class="text-sm font-bold text-[var(--text-primary)] flex items-center space-x-2">
+            <i data-lucide="activity" class="w-4 h-4 text-[#a3845b]"></i>
+            <span>Topic Mastery Breakdown</span>
+          </h3>
+          <div class="space-y-3 text-xs">
+            <div>
+              <div class="flex justify-between font-medium mb-1">
+                <span>Exponential Form \\( \\int e^x [g(x) + g'(x)]dx \\)</span>
+                <span class="font-bold text-[#8b6f47]">80%</span>
+              </div>
+              <div class="w-full bg-[var(--bg-subtle)] h-2 rounded-full overflow-hidden">
+                <div class="bg-[#8b6f47] h-2 rounded-full" style="width: 80%"></div>
+              </div>
+            </div>
+            <div>
+              <div class="flex justify-between font-medium mb-1">
+                <span>Rationalizing Substitutions (LCM of Exponents)</span>
+                <span class="font-bold text-[#8b6f47]">65%</span>
+              </div>
+              <div class="w-full bg-[var(--bg-subtle)] h-2 rounded-full overflow-hidden">
+                <div class="bg-[#8b6f47] h-2 rounded-full" style="width: 65%"></div>
+              </div>
+            </div>
+            <div>
+              <div class="flex justify-between font-medium mb-1">
+                <span>Trigonometric Negative Even Powers \\( \\cot x \\)</span>
+                <span class="font-bold text-[#8b6f47]">75%</span>
+              </div>
+              <div class="w-full bg-[var(--bg-subtle)] h-2 rounded-full overflow-hidden">
+                <div class="bg-[#8b6f47] h-2 rounded-full" style="width: 75%"></div>
+              </div>
+            </div>
+            <div>
+              <div class="flex justify-between font-medium mb-1">
+                <span>Radical Linear-Quadratic Substitution</span>
+                <span class="font-bold text-[#8b6f47]">60%</span>
+              </div>
+              <div class="w-full bg-[var(--bg-subtle)] h-2 rounded-full overflow-hidden">
+                <div class="bg-[#8b6f47] h-2 rounded-full" style="width: 60%"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Student Step History Log (6 cols) -->
+        <div class="lg:col-span-6 p-6 rounded-2xl bg-[var(--bg-surface)] border border-[var(--border-color)] shadow-sm space-y-4">
+          <div class="flex items-center justify-between">
+            <h3 class="text-sm font-bold text-[var(--text-primary)] flex items-center space-x-2">
+              <i data-lucide="git-commit" class="w-4 h-4 text-emerald-500"></i>
+              <span>Live Step Decision Trail</span>
+            </h3>
+            <span class="text-[11px] text-[var(--text-muted)]">Logged for Tutor Inspection</span>
+          </div>
+          <div class="space-y-2.5 max-h-64 overflow-y-auto pr-1 text-xs" id="analyticsStepTrail">
+            <!-- Rendered dynamically -->
+          </div>
+        </div>
+
+      </div>
+
+    </section>
+
+    <!-- ========================================== -->
+    <!-- SCREEN 5: PROFILE & SETTINGS               -->
+    <!-- ========================================== -->
+    <section id="viewSettings" class="hidden space-y-6 max-w-3xl mx-auto animate-cascade-fade">
+      
+      <div>
+        <h2 class="text-xl font-bold text-[var(--text-primary)]">Settings & Preferences</h2>
+        <p class="text-xs text-[var(--text-muted)]">Personalize your learning mode, accessibility, and hints budget</p>
+      </div>
+
+      <div class="bg-[var(--bg-surface)] border border-[var(--border-color)] rounded-2xl p-6 shadow-sm space-y-6">
+        
+        <!-- Hint Mode Setting -->
+        <div class="flex items-start justify-between gap-4 pb-5 border-b border-[var(--border-color)]">
+          <div>
+            <h3 class="font-bold text-sm text-[var(--text-primary)]">Default Problem-Solving Mode</h3>
+            <p class="text-xs text-[var(--text-muted)] mt-0.5">Choose how you want hints delivered when you make an error</p>
+          </div>
+          <select id="settingHintMode" class="text-xs font-semibold p-2 rounded-xl border border-[var(--border-color)] bg-[var(--bg-subtle)] text-[var(--text-primary)] focus:outline-none">
+            <option value="stepwise">Stepwise Multi-Choice (Recommended)</option>
+            <option value="direct">Direct Single-Page Explanation</option>
+          </select>
+        </div>
+
+        <!-- Accessible Font Size Scaling -->
+        <div class="flex items-start justify-between gap-4 pb-5 border-b border-[var(--border-color)]">
+          <div>
+            <h3 class="font-bold text-sm text-[var(--text-primary)]">Typography & Font Size (WCAG AA)</h3>
+            <p class="text-xs text-[var(--text-muted)] mt-0.5">Scale formulas and text for enhanced readability</p>
+          </div>
+          <div class="flex items-center space-x-1.5 bg-[var(--bg-subtle)] p-1 rounded-xl border border-[var(--border-color)]">
+            <button onclick="setFontScale(1)" class="px-2.5 py-1 text-xs font-semibold rounded-lg font-scale-btn bg-white dark:bg-slate-700 shadow-sm" data-scale="1">Normal</button>
+            <button onclick="setFontScale(1.125)" class="px-2.5 py-1 text-xs font-semibold rounded-lg font-scale-btn text-[var(--text-muted)]" data-scale="1.125">Large</button>
+            <button onclick="setFontScale(1.25)" class="px-2.5 py-1 text-xs font-semibold rounded-lg font-scale-btn text-[var(--text-muted)]" data-scale="1.25">XL</button>
+          </div>
+        </div>
+
+        <!-- Stepwise Guidance Status -->
+        <div class="flex items-start justify-between gap-4 pb-5 border-b border-[var(--border-color)]">
+          <div>
+            <h3 class="font-bold text-sm text-[var(--text-primary)]">Interactive Stepwise Hints</h3>
+            <p class="text-xs text-[var(--text-muted)] mt-0.5">Always free and unlimited for all questions in this bank</p>
+          </div>
+          <span class="px-3 py-1 rounded-full bg-emerald-50 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800 text-xs font-semibold">
+            Active & Unlimited
+          </span>
+        </div>
+
+        <!-- Reset Practice Data -->
+        <div class="flex items-start justify-between gap-4 pt-2">
+          <div>
+            <h3 class="font-bold text-sm text-rose-600">Reset Session Progress</h3>
+            <p class="text-xs text-[var(--text-muted)] mt-0.5">Clear completed question statuses and step history</p>
+          </div>
+          <button onclick="resetAllProgress()" class="px-4 py-2 border border-rose-300 dark:border-rose-900 bg-rose-50 dark:bg-rose-950/40 text-rose-700 dark:text-rose-300 font-semibold text-xs rounded-xl hover:bg-rose-100 transition">
+            Reset Data
+          </button>
+        </div>
+
+      </div>
+
+    </section>
+
+  </main>
+
+  <!-- ========================================== -->
+  <!-- MODAL: FULL SINGLE-PAGE EXPLANATION        -->
+  <!-- ========================================== -->
+  <div id="fullExplanationModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 hidden">
+    <div class="cascade-modal-backdrop absolute inset-0" onclick="closeFullExplanationModal()"></div>
+    
+    <div class="relative w-full max-w-4xl max-h-[90vh] bg-[var(--bg-surface)] border border-[var(--border-color)] rounded-2xl shadow-2xl flex flex-col overflow-hidden animate-cascade-fade">
+      
+      <!-- Modal Header -->
+      <div class="p-5 sm:px-7 border-b border-[var(--border-color)] flex items-center justify-between bg-[var(--bg-subtle)]">
+        <div class="flex items-center space-x-3">
+          <div class="w-8 h-8 rounded-xl bg-[#8b6f47] text-white flex items-center justify-center">
+            <i data-lucide="book-open" class="w-4 h-4"></i>
+          </div>
+          <div>
+            <h2 class="text-base sm:text-lg font-bold text-[var(--text-primary)]" id="modalFullTitle">
+              Full Single-Page Solution
+            </h2>
+            <p class="text-xs text-[var(--text-muted)]">Complete algebraic proof, formulas used, and examination notes</p>
+          </div>
+        </div>
+
+        <button onclick="closeFullExplanationModal()" class="p-2 rounded-xl text-[var(--text-muted)] hover:bg-[var(--border-color)] transition">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+      <!-- Modal Body (Scrollable) -->
+      <div class="flex-1 overflow-y-auto p-5 sm:p-7 space-y-6" id="modalFullContent">
+        <!-- Rendered via JS -->
+      </div>
+
+      <!-- Modal Footer -->
+      <div class="p-4 sm:px-7 border-t border-[var(--border-color)] bg-[var(--bg-subtle)] flex items-center justify-between">
+        <span class="text-xs text-[var(--text-muted)]">Exam Tip: Review the derivative verification carefully.</span>
+        <button onclick="closeFullExplanationModal()" class="px-5 py-2 bg-[#8b6f47] hover:bg-[#745a35] text-white font-semibold text-xs sm:text-sm rounded-xl transition">
+          Return to Workspace
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ========================================== -->
+  <!-- DRAWER: TUTOR INSPECTION MODE              -->
+  <!-- ========================================== -->
+  <div id="tutorDrawer" class="fixed inset-y-0 right-0 z-50 w-full max-w-md bg-[var(--bg-surface)] border-l border-[var(--border-color)] shadow-2xl p-6 hidden flex-col overflow-y-auto animate-cascade-fade">
+    <div class="flex items-center justify-between pb-4 border-b border-[var(--border-color)]">
+      <div class="flex items-center space-x-2">
+        <i data-lucide="user-check" class="w-5 h-5 text-[#8b6f47]"></i>
+        <h3 class="font-bold text-base text-[var(--text-primary)]">Tutor Mode Inspector</h3>
+      </div>
+      <button id="btnCloseTutorDrawer" class="p-1.5 rounded-lg text-[var(--text-muted)] hover:bg-[var(--bg-subtle)]">
+        <i data-lucide="x" class="w-4 h-4"></i>
+      </button>
+    </div>
+
+    <div class="mt-4 space-y-4 text-xs">
+      <div class="p-3.5 rounded-xl bg-[#fdfbf7] dark:bg-[#342a1e]/40 border border-[#e0d5c7] dark:border-[#5c4628] text-indigo-900 dark:text-[#e8dac9]">
+        <div class="font-bold mb-1">Student Step History Overview:</div>
+        <p class="text-[11px] text-[var(--text-muted)]">
+          Inspect which intermediate choices the student hesitated on or answered incorrectly.
+        </p>
+      </div>
+
+      <div class="space-y-3" id="tutorTrailContent">
+        <!-- Rendered dynamically -->
+      </div>
+
+      <div class="pt-4 border-t border-[var(--border-color)]">
+        <h4 class="font-bold text-[var(--text-primary)] mb-1">Targeted Tutor Recommendation</h4>
+        <p class="text-[11px] text-[var(--text-muted)] leading-relaxed">
+          Recommend drilling <strong>Exponential Integration by Parts (Q1, Q5)</strong> and <strong>Fractional Power LCM substitutions (Q2)</strong> to solidify sign discipline.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="data.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
